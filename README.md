@@ -60,3 +60,117 @@ warnings.filterwarnings("ignore")
 ## Importing the Dataset
 
 First, we import the dataset `Hitters.csv` into the pandas DataFrame.
+
+## General Information About the Dataset
+
+### Checking the Data Frame
+
+As we want to check the data to have a general opinion about it, we create and use a function called `check_df(dataframe, head=5, tail=5)` that prints referred functions:
+
+
+    dataframe.head(head)
+    
+    dataframe.tail(tail)
+    
+    dataframe.shape
+    
+    dataframe.dtypes
+    
+    dataframe.size
+    
+    dataframe.isnull().sum()
+    
+    dataframe.describe([0, 0.01, 0.05, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 0.95, 0.99, 1]).T
+
+### Defining the Columns
+
+After checking the data frame, we need to define and separate columns as **categorical** and **numerical**. We define a function called `grab_col_names` for separation that benefits from multiple list comprehensions as follows:
+
+    cat_cols = [col for col in dataframe.columns if str(dataframe[col].dtypes) in ['category', 'object', 'bool']]
+    num_but_cat = [col for col in dataframe.columns if dataframe[col].nunique() < cat_th and dataframe[col].dtypes in ['uint8', 'int64', 'int32', 'float64']]
+    cat_but_car = [col for col in df.columns if df[col].nunique() > car_th and str(df[col].dtypes) in ['object', 'category']]
+    cat_cols = cat_cols + num_but_cat
+    num_cols = [col for col in dataframe.columns if dataframe[col].dtypes in ['uint8', 'int64', 'float64']]
+    num_cols = [col for col in num_cols if col not in cat_cols]
+
+`cat_th` and `car_th` are the threshold parameters to decide the column type.
+
+**Categorical Columns:**
+
+* League
+* Division
+* NewLeague
+
+**Numerical Columns:**
+
+* Atbat
+* Hits
+* HmRun
+* Runs
+* RBI
+* Walks
+* Years
+* CAtBat
+* CHits
+* CHmRun
+* CRuns
+* CRBI
+* CWalks
+* PutOuts
+* Assists
+* Errors
+* Salary
+
+### Summarization and Visualization of the Categorical and Numerical Columns
+
+To summarize and visualize the referred column we create two other functions called `cat_summary` and `num_summary`.
+
+For example, categorical column **League**:
+
+############### League ###############
+
+League  | Ratio |
+------|------|
+A     |     175 54.3478 |
+N     |     147 45.6522 |
+
+![download](https://github.com/Trigenaris/Prediction_of_Baseball_Player_Salaries_via_Machine_Learning_Algorithms/assets/122381599/8f81947d-65f9-4c31-8cd0-f97d76b75352)
+
+Another example, numerical column **Salary**:
+
+############### Salary ###############
+
+Process | Result |
+-------|-----------|
+count  |  263.0000 |
+mean   |  535.9259 |
+std    |  451.1187 |
+min    |   67.5000 |
+1%     |   70.0000 |
+5%     |   86.6000 |
+10%    |  100.0000 |
+20%    |  155.0000 |
+30%    |  221.0000 |
+40%    |  300.0000 |
+50%    |  425.0000 |
+60%    |  538.0000 |
+70%    |  700.0000 |
+80%    |  809.0000 |
+90%    | 1048.6666 |
+95%    | 1346.0000 |
+99%    | 2032.8865 |
+max    | 2460.0000 |
+
+Name: Salary, dtype: float64
+
+![download](https://github.com/Trigenaris/Prediction_of_Baseball_Player_Salaries_via_Machine_Learning_Algorithms/assets/122381599/5bec19db-cd0d-4d5c-9464-06c04a956d49)
+
+With the help of a for loop we apply these functions to all columns in the data frame.
+
+We create another plot function called `plot_num_summary(dataframe)` to see whole summary of numerical columns due to high quantity of them:
+
+![download](https://github.com/Trigenaris/Prediction_of_Baseball_Player_Salaries_via_Machine_Learning_Algorithms/assets/122381599/9e5e3b03-9670-4abc-81b1-e526062db078)
+
+## Target Analysis
+
+
