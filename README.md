@@ -35,7 +35,7 @@ NewLeague A factor with levels A and N indicating player’s league at the begin
 
 ## Necessary Libraries
 
-Required libraries, and some settings for this section are:
+Required libraries and some settings for this section are:
 
 ```
 import numpy as np
@@ -65,7 +65,7 @@ First, we import the dataset `Hitters.csv` into the pandas DataFrame.
 
 ### Checking the Data Frame
 
-As we want to check the data to have a general opinion about it, we create and use a function called `check_df(dataframe, head=5, tail=5)` that prints referred functions:
+As we want to check the data to have a general opinion about it, we create and use a function called `check_df(dataframe, head=5, tail=5)` that prints the referred functions:
 
 
     dataframe.head(head)
@@ -167,10 +167,178 @@ Name: Salary, dtype: float64
 
 With the help of a for loop we apply these functions to all columns in the data frame.
 
-We create another plot function called `plot_num_summary(dataframe)` to see whole summary of numerical columns due to high quantity of them:
+We create another plot function called `plot_num_summary(dataframe)` to see the whole summary of numerical columns due to the high quantity of them:
 
 ![download](https://github.com/Trigenaris/Prediction_of_Baseball_Player_Salaries_via_Machine_Learning_Algorithms/assets/122381599/9e5e3b03-9670-4abc-81b1-e526062db078)
 
 ## Target Analysis
+
+We create another function called `target_summary_with_cat(dataframe, target, categorical_col)` to examine the target by categorical features.
+
+For instance *League Feature*
+
+################ Salary --> League #################
+
+League     |    Target Mean
+------------|---------------|
+A    |      541.9995
+N    |      529.1175
+
+## Correlation Analysis
+
+To analyze correlations between numerical columns we create a function called `correlated_cols(dataframe)`:
+
+![download](https://github.com/Trigenaris/Prediction_of_Baseball_Player_Salaries_via_Machine_Learning_Algorithms/assets/122381599/b3dd574f-0d4d-4c17-bdfa-f88cbca20938)
+
+## Missing Value Analysis
+
+We check the data to designate the missing values in it, `dataframe.isnull().sum()`:
+
+Feature | Missing Value |
+--------|-------------|
+AtBat      |   0
+Hits       |   0
+HmRun      |   0
+Runs       |   0
+RBI        |   0
+Walks      |   0
+Years      |   0
+CAtBat     |   0
+CHits      |   0
+CHmRun     |   0
+CRuns      |   0
+CRBI       |   0
+CWalks     |   0
+League     |   0
+Division   |   0
+PutOuts    |   0
+Assists    |   0
+Errors     |   0
+***Salary***     |  ***59***
+NewLeague  |   0
+
+dtype: int64
+
+#
+
+Missing Values Table:
+
+target    |    n_miss  | ratio |
+----------|------------|-------|
+Salary    |  59 | 18.3200 |
+
+We fill the missing values with the mean value of the target which is `425.0000`
+
+## Encoding
+
+To convert categorical features into boolean we create a function called `one_hot_encoding(dataframe, drop_first=True)`:
+
+League_N | Division_W | NewLeague_N |
+---------|------------|-------------|
+False	| False | False
+True | True | True
+False |	True | False
+True | False | True
+True | False | True
+
+## Random Forest: Machine Learning Algorithm
+
+At last, we create our model and see the results:
+
+******************** RF Model Results ********************
+
+MSE Train:  110.665
+
+MSE Test:  292.432
+
+RMSE Train:  70.707
+
+RMSE Test:  194.495
+
+R2 Train:  0.924
+
+R2 Test:  0.555
+
+Cross Validate MSE Score: 87996.550
+
+Cross Validate RMSE Score: 291.386
+
+![download](https://github.com/Trigenaris/Prediction_of_Baseball_Player_Salaries_via_Machine_Learning_Algorithms/assets/122381599/9e235ff1-38de-4321-a188-b5c2151772b0)
+
+## Loading a Base Model and Prediction
+
+Via **joblib** we can save and/or load our model:
+
+    def load_model(pklfile):
+      model_disc = joblib.load(pklfile)
+      return model_disc
+      
+    model_disc = load_model("rf_model.pkl")
+
+________
+
+Now we can make predictions with our model:
+    
+    X = df.drop("Salary", axis=1)
+    x = X.sample(1).values.tolist()
+
+    model_disc.predict(pd.DataFrame(X))[0]
+    331.68
+
+________
+
+    sample2 = [250, 70, 15, 40, 100, 30, 8, 1800, 500, 80, 220, 290, 140, 700, 90, 8, False, True, True]
+    
+    model_disc.predict(pd.DataFrame(sample2).T)[0]
+    620.0307300000001
+
+## Model Tuning
+
+To have better predictions we tune our model and the results are:
+
+Fitting 5 folds for each of 45 candidates, totalling 225 fits
+
+******************** RF Model Results ********************
+
+MSE Train:  195.900
+
+MSE Test:  210.187
+
+RMSE Train:  140.532
+
+RMSE Test:  145.399
+
+R2 Train:  0.761
+
+R2 Test:  0.770
+
+Cross Validate MSE Score: 84230.838
+
+Cross Validate RMSE Score: 285.428
+
+![download](https://github.com/Trigenaris/Prediction_of_Baseball_Player_Salaries_via_Machine_Learning_Algorithms/assets/122381599/52d46d2f-35b3-4801-9757-dae5d62eb1d4)
+
+## Loading a Tuned Model and Prediction
+
+    def load_model(pklfile):
+      model_disc = joblib.load(pklfile)
+      return model_disc
+      
+    model_disc = load_model("rf_model_tuned.pkl")
+
+______
+
+    X = df.drop("Salary", axis=1)
+    x = X.sample(1).values.tolist()
+    
+    model_disc.predict(pd.DataFrame(X))[0]
+    186.33951137202502
+
+______
+
+    sample2 = [250, 70, 15, 40, 100, 30, 8, 1800, 500, 80, 220, 290, 140, 700, 90, 8, False, True, True]
+    
+    model_disc.predict(pd.DataFrame(sample2).T)[0]
+    560.5904032788515
 
 
