@@ -136,7 +136,7 @@ N     |     147 45.6522 |
 
 ![download](https://github.com/Trigenaris/Prediction_of_Baseball_Player_Salaries_via_Machine_Learning_Algorithms/assets/122381599/8f81947d-65f9-4c31-8cd0-f97d76b75352)
 
-Another example, numerical column **Salary**:
+Another example is, the numerical column **Salary**:
 
 ############### Salary ###############
 
@@ -227,7 +227,7 @@ target    |    n_miss  | ratio |
 ----------|------------|-------|
 Salary    |  59 | 18.3200 |
 
-We fill the missing values with the mean value of the target which is `425.0000`
+We fill the missing values with the **mean** value of the target which is `425.0000`
 
 ## Encoding
 
